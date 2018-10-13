@@ -20,16 +20,22 @@ public class UserController {
     private final static List<User> userList = new LinkedList<>();
     private static int autoIncrementId = 1;
 
-    // 요구사항 1 : 현재 시간 반환
+    /**
+     * 요구사항 1 : 현재 시간 반환
+     * @return 현재 시간
+     */
     @GetMapping("")
     public String getTime() {
         LocalDateTime time = LocalDateTime.now();
         return time.getHour() + "시 " + time.getMinute() + "분 " + time.getSecond() + "초";
     }
 
-    // 요구사항 2 : 현재 리스트에 등록된 모든 회원 데이터 반환
-    // 요구사항 3 : 현재 리스트에서 같은 이름의 회원이 있는지 검색, 있으면 회원 데이터 반환, 없으면 "없습니다" 반환
-    // 요구사항 4 : 현재 리스트에서 같은 파트의 회원이 있는지 검색, 있으면 회원 데이터 반환, 없으면 "없습니다" 반환
+    /**
+     * 요구사항 2 : 현재 리스트에 등록된 모든 회원 데이터 반환
+     * 요구사항 3 : 현재 리스트에서 같은 이름의 회원이 있는지 검색, 있으면 회원 데이터 반환, 없으면 "없습니다" 반환
+     * 요구사항 4 : 현재 리스트에서 같은 파트의 회원이 있는지 검색, 있으면 회원 데이터 반환, 없으면 "없습니다" 반환
+     * @return 회원 리스트 or "없습니다"
+     */
     @GetMapping("/users")
     public Object getUserList(
             @RequestParam(value = "name", defaultValue = "null") final String name,
@@ -70,7 +76,11 @@ public class UserController {
         return list;
     }
 
-    // 요구사항 5 : 현재 리스트에서 회원 id값으로 회원 검색, 있으면 회원 데이터 반환, 없으면 "없습니다" 반환
+    /**
+     * 요구사항 5 : 현재 리스트에서 회원 id값으로 회원 검색, 있으면 회원 데이터 반환, 없으면 "없습니다" 반환
+     * @param id
+     * @return 회원정보 or "없습니다"
+     */
     @GetMapping("/users/{user_idx}")
     public Object findById(@PathVariable(value = "user_idx", required = true) final int id) {
         User user = null;
@@ -84,7 +94,11 @@ public class UserController {
         return user;
     }
 
-    // 요구사항 6 : 회원 저장
+    /**
+     * 요구사항 6 : 회원 저장
+     * @param user
+     * @return 회원정보 + 성공 메세지
+     */
     @PostMapping("/users")
     public String insertUser(@RequestBody final User user) {
         user.setUser_idx(autoIncrementId++);
@@ -95,7 +109,12 @@ public class UserController {
                 user.getPart() + " insert Success!";
     }
 
-    // 요구사항 7 : 회원 정보 수정
+    /**
+     * 요구사항 7 : 회원 정보 수정
+     * @param id
+     * @param user
+     * @return 성공 메세지
+     */
     @PutMapping("/users/{user_idx}")
     public String updateUser(@PathVariable(value = "user_idx", required = true) final int id,
                              @RequestBody final User user) {
@@ -116,7 +135,11 @@ public class UserController {
         return "update Success!";
     }
 
-    // 요구사항 8 : 회원 삭제
+    /**
+     * 요구사항 8 : 회원 삭제
+     * @param id
+     * @return 성공 메세지
+     */
     @DeleteMapping("/users/{user_idx}")
     public String deleteUser(
             @PathVariable(value = "user_idx", required = true) final int id) {
