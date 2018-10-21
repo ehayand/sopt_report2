@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by ehay@naver.com on 2018-10-13
@@ -22,6 +23,7 @@ public class UserController {
 
     /**
      * 요구사항 1 : 현재 시간 반환
+     *
      * @return 현재 시간
      */
     @GetMapping("")
@@ -34,40 +36,67 @@ public class UserController {
      * 요구사항 2 : 현재 리스트에 등록된 모든 회원 데이터 반환
      * 요구사항 3 : 현재 리스트에서 같은 이름의 회원이 있는지 검색, 있으면 회원 데이터 반환, 없으면 "없습니다" 반환
      * 요구사항 4 : 현재 리스트에서 같은 파트의 회원이 있는지 검색, 있으면 회원 데이터 반환, 없으면 "없습니다" 반환
+     *
      * @return 회원 리스트 or "없습니다"
      */
     @GetMapping("/users")
     public Object getUserList(
-            @RequestParam(value = "name", defaultValue = "null") final String name,
-            @RequestParam(value = "part", defaultValue = "null") final String part) {
+            @RequestParam("name") final Optional<String> name,
+            @RequestParam("part") final Optional<String> part) {
+//            @RequestParam(value = "name", defaultValue = "null") final String name,
+//            @RequestParam(value = "part", defaultValue = "null") final String part) {
+//
+//        // 요구사항 2
+//        if ("null".equals(name) && "null".equals(part)) {
+//            if (userList.isEmpty()) return "없습니다";
+//            return userList;
+//        }
+//
+//        // 요구사항 3
+//        if ("null".equals(part)) {
+//            for (final User target : userList) {
+//                if (name.equalsIgnoreCase(target.getName())) list.add(target);
+//            }
+//        }
+//
+//        // 요구사항 4
+//        else if ("null".equals(name)) {
+//            for (final User target : userList) {
+//                if (part.equalsIgnoreCase(target.getPart())) list.add(target);
+//            }
+//        }
+//
+//        // 추가사항
+//        else {
+//            for (final User target : userList) {
+//                if (name.equalsIgnoreCase(target.getName()) && part.equalsIgnoreCase(target.getPart())) {
+//                    list.add(target);
+//                }
+//            }
+//        }
 
-        // 요구사항 2
-        if ("null".equals(name) && "null".equals(part)) {
+        if (!name.isPresent() && !part.isPresent()) {
             if (userList.isEmpty()) return "없습니다";
             return userList;
         }
 
         List<User> list = new ArrayList<>();
 
-        // 요구사항 3
-        if ("null".equals(part)) {
-            for (final User target : userList) {
-                if (name.equalsIgnoreCase(target.getName())) list.add(target);
+        if (!part.isPresent()) {
+            for( final User target : userList) {
+                if (name.get().equalsIgnoreCase(target.getName())) list.add(target);
             }
         }
-
-        // 요구사항 4
-        else if ("null".equals(name)) {
-            for (final User target : userList) {
-                if (part.equalsIgnoreCase(target.getPart())) list.add(target);
+        else if (!name.isPresent()) {
+            for(final User target : userList) {
+                if (part.get().equalsIgnoreCase(target.getPart())) list.add(target);
             }
         }
-
-        // 추가사항
         else {
-            for (final User target : userList) {
-                if (name.equalsIgnoreCase(target.getName()) && part.equalsIgnoreCase(target.getPart()))
+            for(final User target : userList) {
+                if (name.get().equalsIgnoreCase(target.getName()) && part.get().equalsIgnoreCase(target.getPart())) {
                     list.add(target);
+                }
             }
         }
 
@@ -78,6 +107,7 @@ public class UserController {
 
     /**
      * 요구사항 5 : 현재 리스트에서 회원 id값으로 회원 검색, 있으면 회원 데이터 반환, 없으면 "없습니다" 반환
+     *
      * @param id
      * @return 회원정보 or "없습니다"
      */
@@ -96,6 +126,7 @@ public class UserController {
 
     /**
      * 요구사항 6 : 회원 저장
+     *
      * @param user
      * @return 회원정보 + 성공 메세지
      */
@@ -111,6 +142,7 @@ public class UserController {
 
     /**
      * 요구사항 7 : 회원 정보 수정
+     *
      * @param id
      * @param user
      * @return 성공 메세지
@@ -137,6 +169,7 @@ public class UserController {
 
     /**
      * 요구사항 8 : 회원 삭제
+     *
      * @param id
      * @return 성공 메세지
      */
